@@ -1,0 +1,168 @@
+
+-- Ktree 
+
+data Tree a = Branch a [Tree a] | Etree
+data Tree2 a = Branch2 a (Tree a) (Tree a) | Leaf a | Et
+
+-- Append --------------------------
+append : [a] -> [a] -> [a]
+append.[].l => l
+append.(cons.e.l).l2 = > cons.e.(append.l.l2)
+
+-- Last of a container
+-- assuming the container is not empty
+last : [a] -> a
+last.(cons.e.[]) => e
+last.(cons.e.l) => last.l
+
+-- Head of container
+head : [a] -> Maybe a
+head.[] => Nothing
+head.(cons.e.l) => Just.e
+
+-- Tail of container
+tail : [a] -> [a]
+tail.[] => []
+tail.(cons.e.l) => l
+
+-- All elements except last
+init : [a] -> [a]
+init.[] => []
+init.(cons.e.[]) => []
+init.(cons.e.l) => cons.e.(init.l)
+
+----------- REDUCER ---------------------
+
+reducer : (a->b->b)->b->[a]->b
+reducer.f.x.[]=>x
+reducer.f.x.(cons.e.l) => f.e.(reducer.f.x.l)
+
+-- REDUCEL -----
+
+reducel : (b->a->b)->b->[a]->b
+reducel.bx.ac.[] => ac
+reducel.bx.ac.(cons.e.l) => reducel.bx.(bx.ac.e).l
+
+------------ ITERATE -------------------
+
+iterate : (a->a) -> a -> [a]
+iterate.f.z => cons.z.(iterate.f.(f.z))
+
+------------ MAP -----------------------
+map : (a->b)->[a]->[b]
+map.f.[] => []
+map.f.(cons.e.l) => cons.(f.e).(map.f.l)
+
+-------------- zipWith.----------------
+zipWith.: (a->b->c)->[a]->[b]->[c]
+zipWith.f.[].l => []
+zipWith.f.l.[] => []
+zipWith.f.(cons.e1.l1).(cons.e2.l2)=> cons.(f.e1.e2).(zipWith.f.l1.l2)
+
+-------------- FILTER -----------------
+makew : [Bool] -> [a] -> [a] 
+--makew.[].[] => []
+--makew.(cons.True.l1).(cons.e.l2) => cons.e.(makew.l1.l2)
+--makew.(cons.False.l1).(cons.e.l2) => makew.l1.l2
+filter : (a -> Bool) -> [a] -> [a]
+--filter.f.l => makew.(ap.f.l).l
+filter.f.[] => []
+filter.f.(cons.x.xs) | f.x => cons.x.(filter.f.xs)
+                     | otherwise => filter.f.xs
+----------- FIND ---------------------
+--get : Bool->a->[a]->(a->Bool)->a
+--get.True.e.l.f => [e]
+--get.False.e.l.f => find.f.l
+
+find : (a -> Bool) -> [a] -> Maybe a
+find.f.[] => Nothing
+find.f.(cons.x.xs) | f.x => Just.x
+                   | otherwise => find.f.xs
+
+------- takewhile -----------------------
+
+--make : [Bool] -> [a] -> [a] 
+--make.[].[] => []
+--make.(cons.False.l1).l2 => []
+--make.(cons.True.l1).(cons.e.l2) => cons.e.(make.l1.l2)
+
+takewhile : (a -> Bool) -> [a] -> [a] 
+takewhile.f.l => make.(ap.f.l).l
+
+
+----- REPEAT -------------------------
+
+repeat :a -> [a]
+repeat.l => cons.l.(repeat.l)
+
+---- take ---------------------------- 
+take : Num -> [a] -> [a]
+take.k.[] =>[]
+take.0.l => []
+take.k.(cons.e.es) => cons.e.(take.(k-1).es)
+
+----- drop ---------------------------
+drop : Num -> [a] -> [a]
+drop.k.[] =>[]
+drop.0.l => l
+drop.k.(cons.e.es) => drop.(k-1).es
+
+------- iseven -----------------------
+iseven : Num -> Bool
+iseven.0 => True
+iseven.1 => False
+iseven.x => iseven.(x-2)
+
+
+------- iseq -------------------------
+iseq : Num -> Num -> Bool
+iseq.0.0 => True 
+iseq.0.x => False
+iseq.x.0 => False
+iseq.x.y => iseq.(x-1).(y-1)
+
+-- OR box  ---------------------------
+or : Bool -> Bool -> Bool
+or.x.True => True
+or.True.x => True
+or.False.False => False
+
+-- and box ---------------------------
+and : Bool -> Bool -> Bool
+and.True.True => True
+and.x.y => False
+
+-- not box ---------------------------
+not : Bool -> Bool
+not.True => False
+not.False => True
+
+-- Checks if a number is less than the given number or not
+islessthan : Num -> Num -> Bool
+islessthan.0.x => False
+islessthan.x.0 => True
+islessthan.x.y => islessthan.(x-1).(y-1)
+
+-- zip ---------------------------------
+tpz : a -> b -> (a,b)
+tpz.x.y => (a,b)
+
+zip : [a]->[b]->[(a,b)]
+zip.xs.ys => zipWith.tpz.xs.ys
+
+-- concat 
+concat : [[a]] -> [a]
+concat.xss => reducer.append.[].xss
+
+-- Map Tree 
+mapTree : (a->b) -> Tree a -> Tree b
+mapTree.f.Etree => Etree
+mapTree.f.(Branch.x.[]) => Branch.(f.x).[]
+mapTree.f.(Branch.x.xs) => Branch.(f.x).(map.(mapTree.f).xs)
+
+-- Zip With Tree 
+
+zipWithTree : (a->b->c) -> Tree a -> Tree b -> Tree c
+zipWithTree.f.(Branch.x.[]).(Branch.y.[]) => Branch.(f.x.y).[]
+zipWithTree.f.(Branch.x.xs).(Branch.y.ys) | eq.(lenght.xs).(length.ys) => Branch.(f.x.y).(zipWith.zipWithTree.xs.ys)
+                                          | otherwise                  => Etree
