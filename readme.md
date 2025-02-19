@@ -1,62 +1,50 @@
 
-# Linux 0.0.1 Kernel (32-bit Port)
+# Functional Programming Library in Gofer  
 
-## Overview
+## Overview  
 
-This project is a **32-bit port of the original Linux v0.0.1 kernel**, which was initially developed by **Linus Torvalds** for the **16-bit 8086 microprocessor**. The goal is to adapt the earliest version of Linux to run on a **modern 32-bit Intel i3 processor**, preserving its historical significance while enhancing compatibility.
+This project is a **basic algebra and functional programming library** implemented using **Gofer**, a variant of **Haskell**. It includes a variety of list, tree, and number-processing functions, demonstrating recursion, higher-order functions, and functional paradigms.  
 
-### Major Changes
-- **Assembly Code Updated to 32-bit Format**: The original 16-bit assembly has been rewritten to support protected mode.
-- **Recursive Makefiles Updated**: The build system used very old tools and has been modernized for today's toolchains.
-- **New Toolchain Compatibility**: The code is now compatible with modern **GCC, Binutils, and NASM**.
+## Features  
 
-## Features
+- **Algebraic Functions**: Operations such as `add`, `mul`, and numerical comparisons (`iseq`, `islessthan`).  
+- **List Operations**: Implementations of `map`, `filter`, `reduce`, `zipWith`, `take`, `drop`, `concat`.  
+- **Tree Structures**: Definitions for `Tree` and `Tree2`, with functions like `mapTree` and `zipWithTree`.  
+- **Boolean Logic**: Includes `and`, `or`, and `not`.  
+- **Recursion-Based Iterators**: Functions like `iterate`, `repeat`, and `takewhile`.  
 
-- **Bootable 32-bit Kernel**: Modified to support **protected mode** on Intel i3 processors.
-- **Memory Management Updates**: Adapts original segmentation to a **flat memory model**.
-- **Filesystem Handling**: Retains early Linux filesystem structure.
-- **Process Management**: Supports **basic task scheduling and system calls**.
-- **Enhanced Debugging**: Includes modifications for **32-bit system diagnostics**.
+## Installation  
 
-## Installation
-
-### Prerequisites
-
-- **QEMU** or **Bochs** for testing.
-- **GCC and Binutils** with cross-compilation support for **i386**.
-- **NASM** for assembling boot code.
-
-### Building the Kernel
-
-1. Clone the repository:
-
+1. Clone the repository:  
    ```bash
-   git clone https://github.com/Low-Level-Tiwari/Linux-0.0.1-Kernel.git
-   cd Linux-0.0.1-Kernel
+   git clone https://github.com/Low-Level-Tiwari/Functional-Programming-Gofer.git
+   cd Functional-Programming-Gofer
    ```
-
-2. Compile the kernel:
-
+2. Run the Gofer interpreter and load the library:  
    ```bash
-   make
-   ```
+   gofer
+   :load lib2
+   ```  
 
-3. Run using QEMU:
+## Usage  
 
-   ```bash
-   qemu-system-i386 -kernel linux-0.0.1.bin
-   ```
+Once the library is loaded, you can call functions interactively:  
+```haskell
+add 5 3  -- Example addition function  
+map (*2) [1,2,3]  -- Doubles each element in the list  
+zipWith (+) [1,2,3] [4,5,6]  -- Adds corresponding elements  
+```
 
-## Future Improvements
+## Future Enhancements  
 
-- Implement a **fully functional 32-bit user space**.
-- Add **basic device driver support**.
-- Improve **memory management for extended RAM**.
+- Implement additional algebraic structures.  
+- Extend tree-based operations.  
+- Improve optimization for recursive functions.  
 
-## License
+## License  
 
-This project follows the original **GPL license** of Linux.
+This project is released under the **MIT License**.  
 
-## Contact
+## Contact  
 
-For questions and discussions, open an issue on **GitHub**.
+For questions or discussions, open an issue on **GitHub**.  
